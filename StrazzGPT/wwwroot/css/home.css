@@ -4,3 +4,14 @@
 .text-center {
     color: gold;
 }
+
+.home-link{
+    color: gold;
+    text-decoration: underline gold;
+}
+
+.home-link:hover{
+    color: gold;
+    font-weight: bolder;
+    text-decoration: underline solid 2px gold;
+}

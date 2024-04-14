@@ -14,12 +14,40 @@
             <input type="text" id="promptInput" placeholder="Enter your prompt" required>
             <button type="submit">Submit</button>
         </form>
-        <div id="response"></div>
     </div>
     <div class="response-area">
         <div>
-
+            <div id="response"></div>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
+
+
+<script>
+   document.getElementById('promptForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const prompt = document.getElementById('promptInput').value;
+
+    fetch('/Chat/GetChatResponse', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt: prompt })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();  // Continue to expect JSON response
+    })
+    .then(data => {
+        document.getElementById('response').innerText = data.message;  // Access the 'message' property
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        document.getElementById('response').innerText = 'Fetch error: ' + error.message;
+    });
+});
+</script>

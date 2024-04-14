@@ -4,7 +4,35 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to StrazzGPT</h1>
-    <p>Click  <a asp-controller="Chat" asp-action="Chat">Here</a> to chat with Strazz.</p>
+    <p>Click  <a asp-controller="Chat" asp-action="Chat" class="home-link">Here</a> to chat with Strazz.</p>
+    <!-- Modal -->
+    <div class="modal fade" id="homeModel" tabindex="-1" role="dialog" aria-labelledby="homeModelLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #333;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="homeModelLabel">Welcome to StrazzGPT</h5>
+                </div>
+                <div class="modal-body">
+                    This program is to introduce the use of Semantic Kernal within a C# environment.<br>
+                    By using this application, you agree to the
+                    <a class="nav-link text-dark home-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>
+                    You also agree to the tracking/ learning of all prompts given.<br />
+                    All chats are recorded and monitired by the developers behind StrazzGPT and the LLM selected to use. 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Chat">
+                        <button type="button" class="btn btn-primary">Chat Now</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Show the modal on page load
+        $('#homeModel').modal('show');
+    });
+</script>

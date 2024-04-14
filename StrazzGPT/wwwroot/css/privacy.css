@@ -1,0 +1,25 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    line-height: 2.6;
+    margin: 0;
+    background-color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+h1 {
+    color: gold;
+}
+
+p {
+    color: gold;
+}
+
+.footer {
+    color: gold;
+}

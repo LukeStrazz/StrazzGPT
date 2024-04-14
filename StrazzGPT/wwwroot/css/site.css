@@ -11,6 +11,10 @@ html {
   }
 }
 
+.model-content{
+    background-color: #333 !important;
+}
+
 .nav-link{
     color: gold !important;
 }
