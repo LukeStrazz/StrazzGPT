@@ -32,3 +32,18 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(build.artifactStagingDirectory)\WebApp.zip'
+    artifactName: 'drop'
+    publishLocation: 'Container'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1'
+    appType: 'webApp'
+    WebAppName: 'LukeStrazz.StrazzGPT'
+    package: '$(Pipeline.Workspace)/drop/WebApp.zip'
+    appSettings: '-API_KEY $(API_KEY)'
