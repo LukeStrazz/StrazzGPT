@@ -46,4 +46,4 @@ steps:
     appType: 'webApp'
     WebAppName: 'LukeStrazz.StrazzGPT'
     package: '$(Pipeline.Workspace)/drop/WebApp.zip'
-    appSettings: '-API_KEY $(API_KEY)'
+    appSettings: 'API_KEY=$(API_KEY)'
