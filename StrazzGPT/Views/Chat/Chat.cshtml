@@ -5,49 +5,56 @@
     <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="prompt-container">
-        <div class="text-center">
-            <h1 class="display-4">Let's start chatting</h1>
-        </div>
-
-        <form id="promptForm">
-            <input type="text" id="promptInput" placeholder="Enter your prompt" required>
-            <button type="submit">Submit</button>
+    <div class="chat-container">
+        <div id="chatOutput" class="output"></div>
+        <form id="promptForm" class="input-form">
+            <textarea id="promptInput" placeholder="Ask Strazz a Question..." required></textarea>
+            <button type="submit">Send</button>
         </form>
     </div>
-    <div class="response-area">
-        <div>
-            <div id="response"></div>
-        </div>
-    </div>
-    <script src="script.js"></script>
 </body>
 
 
 <script>
-   document.getElementById('promptForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const prompt = document.getElementById('promptInput').value;
-
-    fetch('/Chat/GetChatResponse', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ prompt: prompt })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
-        }
-        return response.json();  // Continue to expect JSON response
-    })
-    .then(data => {
-        document.getElementById('response').innerText = data.message;  // Access the 'message' property
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-        document.getElementById('response').innerText = 'Fetch error: ' + error.message;
+    document.getElementById('promptInput').addEventListener('input', function () {
+        this.style.height = 'auto'; // Reset the height
+        this.style.height = (this.scrollHeight) + 'px'; // Set the height equal to the scroll height
     });
-});
+
+    document.getElementById('promptForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const inputField = document.getElementById('promptInput');
+        const prompt = inputField.value;
+        inputField.value = ''; // Clear the input after sending
+        inputField.style.height = '50px'; // Reset the height after submit
+
+        // Display user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user-message';
+        userMessage.textContent = prompt;
+        document.getElementById('chatOutput').appendChild(userMessage);
+
+        fetch('/Chat/GetChatResponse', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: prompt })
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Display bot response
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot-message';
+                botMessage.textContent = data.message;
+                document.getElementById('chatOutput').appendChild(botMessage);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message error-message';
+                errorMessage.textContent = 'Error fetching response';
+                document.getElementById('chatOutput').appendChild(errorMessage);
+            });
+    });
 </script>

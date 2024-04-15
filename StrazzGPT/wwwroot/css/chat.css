@@ -1,63 +1,112 @@
 ﻿body, html {
-    height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-.prompt-container {
-    background-color: #333;
-    color: gold;
-    border: 1px solid gold;
-    padding: 20px;
-    width: 90%;
-    max-width: 600px;
-    margin: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-    margin-top: 2rem;
-}
-
-input[type="text"] {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid gold;
-    border-radius: 4px;
-    background-color: #222;
-    color: gold;
-}
-
-#promptInput {
-    width: 100%;
-    min-height: 50px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid gold;
-    color: gold;
-    resize: vertical;
-}
-
-
-body{
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
     background-color: #333;
 }
 
-button {
+header {
+    z-index: 10;
+}
+
+.chat-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin: 10px;
+    margin-right: 20px;
+    bottom: 5rem;
+    position: absolute;
+    min-width: -webkit-fill-available;
+}
+
+.output {
+    flex-grow: 1;
+    overflow-y: scroll;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+
+.user-message {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+}
+
+.bot-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+    margin-right: 10px;
+}
+
+.input-form {
+    display: flex;
+    margin-top: 10px;
+}
+
+.input-form textarea {
+    flex-grow: 1;
+    border: 1px solid gold;
+    border-radius: 5px;
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #333;
+    color: gold;
+    resize: none; /* Prevents manual resizing */
+    overflow: auto; /* Ensures scrollbar is available if needed */
+    line-height: 1.5; /* Improves readability */
+    min-height: 50px; /* Minimum height */
+}
+
+.input-form button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
     background-color: gold;
     color: #333;
-    border: none;
-    padding: 10px 20px;
     cursor: pointer;
-    border-radius: 4px;
-    font-size: 16px;
 }
 
-button:hover {
-    background-color: #bbaa55;
+.input-form button:hover {
+    background-color: goldenrod;
 }
 
-.response-area {
-    height: 100%;
-    color: gold;
-    background-color: #333;
+.output::-webkit-scrollbar {
+    width: 12px;
+}
+
+.output::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 10px;
+}
+
+.output::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+    .output::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+.output::-webkit-scrollbar-button {
+    display: none; 
+}
+
+/* Styling for Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #333 #222; 
 }

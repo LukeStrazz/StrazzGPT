@@ -24,7 +24,8 @@ namespace StrazzGPT.Controllers
         {
             var client = _clientFactory.CreateClient();
             var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
-            requestMessage.Headers.Add("Authorization", "Bearer YOUR-API-KEY");
+            var apiKey = Environment.GetEnvironmentVariable("API_KEY");
+            requestMessage.Headers.Add("Authorization", $"Bearer {apiKey}");
             requestMessage.Content = new StringContent(
         JsonConvert.SerializeObject(new
         {
