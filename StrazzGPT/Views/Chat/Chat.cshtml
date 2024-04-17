@@ -3,30 +3,44 @@
 }
 <head>
     <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
 </head>
 <body>
     <div class="chat-container">
         <div id="chatOutput" class="output"></div>
         <form id="promptForm" class="input-form">
             <textarea id="promptInput" placeholder="Ask Strazz a Question..." required></textarea>
-            <button type="submit">Send</button>
+            <button type="submit" id="sendButton" class="btn btn-primary">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none;" id="spinner"></span>
+                <span id="buttonText">Send</span>
+            </button>
         </form>
     </div>
 </body>
 
-
 <script>
     document.getElementById('promptInput').addEventListener('input', function () {
         this.style.height = 'auto'; // Reset the height
-        this.style.height = (this.scrollHeight) + 'px'; // Set the height equal to the scroll height
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px'; // Set height based on content, up to a max
     });
+
+    let messages = []; // Store chat history here
 
     document.getElementById('promptForm').addEventListener('submit', function (event) {
         event.preventDefault();
         const inputField = document.getElementById('promptInput');
         const prompt = inputField.value;
+
+        const spinner = document.getElementById('spinner');
+        const buttonText = document.getElementById('buttonText');
+        const sendButton = document.getElementById('sendButton');
+
         inputField.value = ''; // Clear the input after sending
         inputField.style.height = '50px'; // Reset the height after submit
+        inputField.disabled = true; // Disable the input while sending
+        spinner.style.display = 'inline-block'; // Show spinner
+        buttonText.textContent = 'Loading...'; // Change button text
+        sendButton.disabled = true; // Disable the button to prevent multiple submissions
 
         // Display user message
         const userMessage = document.createElement('div');
@@ -34,20 +48,47 @@
         userMessage.textContent = prompt;
         document.getElementById('chatOutput').appendChild(userMessage);
 
+        messages.push({ role: 'user', content: prompt });
+
         fetch('/Chat/GetChatResponse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prompt: prompt })
+            body: JSON.stringify({ messages: messages }) // Correctly format the messages array for the backend
         })
             .then(response => response.json())
             .then(data => {
-                // Display bot response
-                const botMessage = document.createElement('div');
-                botMessage.className = 'message bot-message';
-                botMessage.textContent = data.message;
-                document.getElementById('chatOutput').appendChild(botMessage);
+                messages.push({ role: 'system', content: data.message }); // Store the system's response for context
+
+                const converter = new showdown.Converter();
+                const htmlResponse = converter.makeHtml(data.message);
+
+                const responseContainer = document.createElement('div');
+                responseContainer.className = 'message bot-message';
+                responseContainer.innerHTML = `<div class="response-content">${htmlResponse}</div>`;
+
+                if (/```(.*?)```/s.test(data.message)) {
+                    const codeText = data.message.match(/```(.*?)```/s)[1];
+                    const copyButton = document.createElement('button');
+                    copyButton.textContent = 'Copy';
+                    copyButton.onclick = () => {
+                        navigator.clipboard.writeText(codeText).then(() => {
+                            alert('Copied to clipboard!');
+                        }, err => {
+                            console.error('Could not copy text: ', err);
+                        });
+                    };
+                    responseContainer.appendChild(copyButton);
+                }
+
+                document.getElementById('chatOutput').appendChild(responseContainer);
+
+                // Reset UI elements
+                spinner.style.display = 'none';
+                buttonText.textContent = 'Send';
+                sendButton.disabled = false;
+                inputField.disabled = false;
             })
             .catch(error => {
                 console.error('Fetch error:', error);
@@ -55,6 +96,12 @@
                 errorMessage.className = 'message error-message';
                 errorMessage.textContent = 'Error fetching response';
                 document.getElementById('chatOutput').appendChild(errorMessage);
+
+                spinner.style.display = 'none';
+                buttonText.textContent = 'Send';
+                sendButton.disabled = false;
+                inputField.disabled = false;
             });
+
     });
 </script>

@@ -29,7 +29,8 @@ header {
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    height: 75vh;
+    height: 70vh;
+    border-top: groove;
 }
 
 .message {
@@ -37,6 +38,20 @@ header {
     margin-bottom: 8px;
     border-radius: 10px;
     max-width: 70%;
+}
+
+.message button {
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.message button:hover {
+    background-color: #45a049;
 }
 
 .user-message {
@@ -65,10 +80,15 @@ header {
     background-color: #333;
     color: gold;
     resize: none; /* Prevents manual resizing */
-    overflow: auto; /* Ensures scrollbar is available if needed */
+    overflow-x: hidden; /* Hide horizontal overflow */
+    overflow-y: auto; /* Automatically add vertical scrollbar when needed */
     line-height: 1.5; /* Improves readability */
     min-height: 50px; /* Minimum height */
+    max-height: 150px; /* Maximum height before scrolling */
+    white-space: pre-wrap; /* Ensures that text wraps and whitespace is preserved */
+    word-wrap: break-word; /* Breaks long words if necessary to fit within the width */
 }
+
 
 .input-form button {
     padding: 10px 20px;

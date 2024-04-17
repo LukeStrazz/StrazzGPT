@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StrazzGPT.Models;
@@ -23,18 +25,19 @@ namespace StrazzGPT.Controllers
         public async Task<IActionResult> GetChatResponse([FromBody] ChatRequest request)
         {
             var client = _clientFactory.CreateClient();
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions");
             var apiKey = Environment.GetEnvironmentVariable("API_KEY");
-            requestMessage.Headers.Add("Authorization", $"Bearer {apiKey}");
-            requestMessage.Content = new StringContent(
-        JsonConvert.SerializeObject(new
-        {
-            model = "gpt-3.5-turbo",
-            messages = new[] { new { role = "user", content = request.Prompt } }
-        }),
-            System.Text.Encoding.UTF8,
-            "application/json"
-        );
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+            var payload = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = request.Messages.Select(m => new { role = m.Role, content = m.Content }).ToList()
+            };
+
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json")
+            };
 
             var response = await client.SendAsync(requestMessage);
             if (response.IsSuccessStatusCode)
@@ -42,7 +45,7 @@ namespace StrazzGPT.Controllers
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var jsonResponse = JObject.Parse(responseContent);
                 var reply = jsonResponse["choices"][0]["message"]["content"].ToString();
-                return Json(new { message = reply });  // Wrap the string in a JSON object
+                return Json(new { message = reply });
             }
             else
             {
@@ -50,6 +53,7 @@ namespace StrazzGPT.Controllers
                 return StatusCode((int)response.StatusCode, "Error from API: " + errorContent);
             }
         }
+
 
 
     }

@@ -2,6 +2,6 @@
 {
     public class ChatRequest
     {
-        public string Prompt { get; set; }
+        public List<Message>? Messages { get; set; }
     }
 }
