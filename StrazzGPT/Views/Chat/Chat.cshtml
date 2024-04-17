@@ -91,17 +91,43 @@
                 inputField.disabled = false;
             })
             .catch(error => {
-                console.error('Fetch error:', error);
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'message error-message';
-                errorMessage.textContent = 'Error fetching response';
-                document.getElementById('chatOutput').appendChild(errorMessage);
+                if (error.response) {
+                    // First, check if the response is ok and if it's expected to be JSON
+                    error.response.text().then(text => {
+                        try {
+                            const jsonData = JSON.parse(text);
+                            const apiErrorMessage = jsonData.error && jsonData.error.message ? jsonData.error.message : "Unknown API error occurred.";
+                            displayErrorMessage(`Error from API:<strong> ${apiErrorMessage} </strong>`);
+                        } catch (e) {
+                            // If JSON parsing fails, treat it as plain text
+                            displayErrorMessage(`Non-JSON Error from API:<strong> ${text} </strong>`);
+                        }
+                    }).catch(textError => {
+                        // This catch is for the text() promise if it fails
+                        displayErrorMessage("Error reading error response.");
+                    });
+                } else {
+                    // Network error or no response was received
+                    displayErrorMessage(`API or Network Error: <strong> ${error.message} </strong>`);
+                }
 
-                spinner.style.display = 'none';
-                buttonText.textContent = 'Send';
-                sendButton.disabled = false;
-                inputField.disabled = false;
+                // UI Reset
+                resetUI();
             });
-
     });
+
+    function displayErrorMessage(message) {
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'alert alert-danger';
+        errorMessage.setAttribute('role', 'alert');
+        errorMessage.innerHTML = message;
+        document.getElementById('chatOutput').appendChild(errorMessage);
+    }
+
+    function resetUI() {
+        spinner.style.display = 'none';
+        buttonText.textContent = 'Send';
+        sendButton.disabled = false;
+        inputField.disabled = false;
+    }
 </script>
