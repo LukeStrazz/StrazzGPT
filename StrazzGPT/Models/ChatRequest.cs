@@ -1,7 +1,6 @@
-﻿namespace StrazzGPT.Models
+﻿namespace StrazzGPT.Models;
+
+public class ChatRequest
 {
-    public class ChatRequest
-    {
-        public List<Message>? Messages { get; set; }
-    }
+    public List<Message>? Messages { get; set; }
 }
