@@ -97,10 +97,10 @@
                         try {
                             const jsonData = JSON.parse(text);
                             const apiErrorMessage = jsonData.error && jsonData.error.message ? jsonData.error.message : "Unknown API error occurred.";
-                            displayErrorMessage(`Error from API:<strong> ${apiErrorMessage} </strong>`);
+                            displayErrorMessage(`Error from API: <strong> ${apiErrorMessage} </strong>`);
                         } catch (e) {
                             // If JSON parsing fails, treat it as plain text
-                            displayErrorMessage(`Non-JSON Error from API:<strong> ${text} </strong>`);
+                            displayErrorMessage(`Non-JSON Error from API: <strong> ${text} </strong>`);
                         }
                     }).catch(textError => {
                         // This catch is for the text() promise if it fails
