@@ -39,6 +39,8 @@
         inputField.style.height = '50px'; // Reset the height after submit
         inputField.disabled = true; // Disable the input while sending
         spinner.style.display = 'inline-block'; // Show spinner
+        spinner.style.color = 'darkgoldenrod';
+        sendButton.style.backgroundColor = 'goldenrod';
         buttonText.textContent = 'Loading...'; // Change button text
         sendButton.disabled = true; // Disable the button to prevent multiple submissions
 
@@ -85,10 +87,7 @@
                 document.getElementById('chatOutput').appendChild(responseContainer);
 
                 // Reset UI elements
-                spinner.style.display = 'none';
-                buttonText.textContent = 'Send';
-                sendButton.disabled = false;
-                inputField.disabled = false;
+                resetUI();
             })
             .catch(error => {
                 if (error.response) {
@@ -128,6 +127,7 @@
         spinner.style.display = 'none';
         buttonText.textContent = 'Send';
         sendButton.disabled = false;
+        sendButton.style.backgroundColor = 'gold';
         inputField.disabled = false;
     }
 </script>
