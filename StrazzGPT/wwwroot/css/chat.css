@@ -30,7 +30,7 @@ header {
     display: flex;
     flex-direction: column;
     height: 70vh;
-    border-top: groove;
+    border-top: 1px groove;
 }
 
 .message {
